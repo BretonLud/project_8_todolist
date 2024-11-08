@@ -1,0 +1,31 @@
+# config/packages/security.yaml
+security:
+  encoders:
+    App\Entity\User:
+      algorithm: bcrypt
+
+  providers:
+    database_users:
+      entity:
+        class: App\Entity\User
+        property: username
+
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+    main:
+      anonymous: true
+      provider: database_users
+      form_login:
+        login_path: login
+        check_path: login_check
+      logout:
+        path: logout
+        target: /
+
+  access_control:
+    - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/, roles: ROLE_USER }
