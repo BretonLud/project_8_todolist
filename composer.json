@@ -13,69 +13,54 @@
     }
   },
   "require": {
-    "php": ">=7.4",
-    "doctrine/orm": "^2.5",
-    "doctrine/doctrine-bundle": "^1.12.13",
-    "doctrine/doctrine-cache-bundle": "^1.2",
-    "symfony/swiftmailer-bundle": "^3.4",
-    "symfony/monolog-bundle": "^3.4",
-    "symfony/polyfill-apcu": "^1.0",
-    "doctrine/doctrine-migrations-bundle": "^2.1",
-    "laminas/laminas-code": "^3.5",
-    "ocramius/proxy-manager": "^2.8",
+    "php": ">=8.3",
+    "doctrine/orm": "^2.8",
+    "doctrine/doctrine-bundle": "^2.5",
+    "symfony/swiftmailer-bundle": "^3.5",
+    "symfony/monolog-bundle": "^3.7",
+    "symfony/polyfill-apcu": "^1.23",
+    "doctrine/doctrine-migrations-bundle": "^3.2",
+    "laminas/laminas-code": "^4.0",
     "doctrine/inflector": "^1.4",
-    "symfony/flex": "^1.21",
-    "symfony/asset": "^4.4",
-    "symfony/mailer": "^4.4",
-    "symfony/form": "^4.4",
-    "symfony/security-bundle": "^4.4",
-    "symfony/translation": "^4.4",
-    "symfony/validator": "^4.4",
+    "symfony/flex": "^2.0",
+    "symfony/asset": "^5.4",
+    "symfony/mailer": "^5.4",
+    "symfony/form": "^5.4",
+    "symfony/security-bundle": "^5.4",
+    "symfony/translation": "^5.4",
+    "symfony/validator": "^5.4",
     "doctrine/annotations": "^1.14",
-    "symfony/twig-bundle": "^4.4",
-    "twig/extra-bundle": "2.12|^3.0",
-    "twig/twig": "2.12|^3.0",
-    "symfony/yaml": "^4.4",
+    "symfony/twig-bundle": "^5.4",
+    "twig/extra-bundle": "^3.0",
+    "twig/twig": "^3.0",
+    "symfony/yaml": "^5.4",
     "symfony/webpack-encore-bundle": "^1.17",
     "sensio/framework-extra-bundle": "^6.2"
   },
   "require-dev": {
-    "symfony/phpunit-bridge": "^4.4",
-    "symfony/dotenv": "^4.4",
+    "symfony/phpunit-bridge": "^5.4",
+    "symfony/dotenv": "^5.4",
     "symfony/maker-bundle": "^1.39",
     "doctrine/doctrine-fixtures-bundle": "^3.4",
-    "symfony/stopwatch": "^4.4",
-    "symfony/web-profiler-bundle": "^4.4"
+    "symfony/stopwatch": "^5.4",
+    "symfony/web-profiler-bundle": "^5.4"
   },
   "scripts": {
-    "symfony-scripts": [
-      "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-    ],
-    "post-install-cmd": [
-      "@symfony-scripts"
-    ],
-    "post-update-cmd": [
-      "@symfony-scripts"
-    ],
     "auto-scripts": {
       "cache:clear": "symfony-cmd",
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
-    }
+    },
+    "post-install-cmd": [
+      "@auto-scripts"
+    ],
+    "post-update-cmd": [
+      "@auto-scripts"
+    ]
   },
   "extra": {
-    "symfony-app-dir": "app",
-    "symfony-bin-dir": "bin",
-    "symfony-var-dir": "var",
-    "symfony-web-dir": "public",
-    "symfony-tests-dir": "tests",
-    "symfony-assets-install": "relative",
     "symfony": {
-      "docker": true
+      "allow-contrib": false,
+      "require": "5.4.*"
     }
   },
   "config": {
@@ -84,7 +69,7 @@
       "symfony/runtime": true
     },
     "platform": {
-      "php": "7.4"
+      "php": "8.3"
     }
   },
   "conflict": {
