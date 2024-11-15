@@ -57,7 +57,7 @@ class Task
         return $this->createdAt;
     }
     
-    public function setCreatedAt($createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
@@ -68,7 +68,7 @@ class Task
         return $this->title;
     }
     
-    public function setTitle($title): self
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -79,7 +79,7 @@ class Task
         return $this->content;
     }
     
-    public function setContent($content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
         return $this;
@@ -90,7 +90,7 @@ class Task
         return $this->isDone;
     }
     
-    public function toggle($flag): self
+    public function toggle(bool $flag): self
     {
         $this->isDone = $flag;
         return $this;
