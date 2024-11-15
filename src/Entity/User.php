@@ -51,9 +51,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getUserIdentifier();
     }
     
-    public function setUsername(string $username): void
+    public function setUsername(string $username): self
     {
         $this->username = $username;
+        return $this;
     }
     
     public function getUserIdentifier(): string
@@ -66,9 +67,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
     
-    public function setPassword(string $password): void
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
     }
     
     public function getEmail(): string
@@ -76,9 +78,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
     
-    public function setEmail(string $email): void
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+        return $this;
     }
     
     public function getRoles(): array
