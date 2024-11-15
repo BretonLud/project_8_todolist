@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TaskType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('title', TextType::class, [
