@@ -4,19 +4,26 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+    
+    public function __construct(private readonly UserService $userService, private readonly UserPasswordHasherInterface $passwordHasher)
+    {
+    }
+    
     /**
      * @Route("/users", name="user_list")
      */
     public function listAction(): Response
     {
-        return $this->render('user/list.html.twig', ['users' => $this->getDoctrine()->getRepository('App:User')->findAll()]);
+        return $this->render('user/list.html.twig', ['users' => $this->userService->findAll()]);
     }
     
     /**
@@ -30,13 +37,9 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
             
-            $em->persist($user);
-            $em->flush();
-            
+            $this->userService->encoderPassword($user);
+            $this->userService->save($user);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
             
             return $this->redirectToRoute('user_list');
@@ -55,11 +58,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
-            
-            $this->getDoctrine()->getManager()->flush();
-            
+            $this->userService->encoderPassword($user);
+            $this->userService->save($user);
             $this->addFlash('success', "L'utilisateur a bien été modifié");
             
             return $this->redirectToRoute('user_list');
