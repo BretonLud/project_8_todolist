@@ -1,6 +1,10 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
   secret: '%env(APP_SECRET)%'
+  http_method_override: true
+  handle_all_throwables: true
+  annotations:
+    enabled: false
   #csrf_protection: true
   #http_method_override: true
 
@@ -18,3 +22,9 @@ framework:
   #fragments: true
   php_errors:
     log: true
+
+when@test:
+  framework:
+    test: true
+    session:
+      storage_factory_id: session.storage.factory.mock_file
