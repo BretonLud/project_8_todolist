@@ -51,10 +51,14 @@
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
     },
     "post-install-cmd": [
-      "@auto-scripts"
+      "@auto-scripts",
+      "php bin/console cache:clear",
+      "php bin/console cache:warmup"
     ],
     "post-update-cmd": [
-      "@auto-scripts"
+      "@auto-scripts",
+      "php bin/console cache:clear",
+      "php bin/console cache:warmup"
     ]
   },
   "extra": {
