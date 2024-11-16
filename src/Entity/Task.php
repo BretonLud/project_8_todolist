@@ -27,7 +27,7 @@ class Task
     
     #[ORM\Column(type: "boolean")]
     private bool $isDone;
-
+    
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     private ?User $user = null;
     
@@ -85,16 +85,21 @@ class Task
         $this->isDone = $flag;
         return $this;
     }
-
+    
     public function getUser(): ?User
     {
         return $this->user;
     }
-
+    
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
+        
         return $this;
+    }
+    
+    public function __toString(): string
+    {
+        return $this->title;
     }
 }
