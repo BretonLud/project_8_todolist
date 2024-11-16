@@ -27,7 +27,7 @@
         "version": "1.4.0"
     },
     "doctrine/doctrine-fixtures-bundle": {
-        "version": "3.2",
+        "version": "3.6",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
