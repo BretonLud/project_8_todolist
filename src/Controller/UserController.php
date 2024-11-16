@@ -8,27 +8,23 @@ use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class UserController extends AbstractController
 {
-    
-    public function __construct(private readonly UserService $userService, private readonly UserPasswordHasherInterface $passwordHasher)
+    public function __construct(
+        private readonly UserService $userService,
+    )
     {
     }
     
-    /**
-     * @Route("/users", name="user_list")
-     */
+    #[Route("/users", name: "user_list", methods: ["GET"])]
     public function listAction(): Response
     {
         return $this->render('user/list.html.twig', ['users' => $this->userService->findAll()]);
     }
     
-    /**
-     * @Route("/users/create", name="user_create")
-     */
+    #[Route("/users/create", name: "user_create", methods: ["GET", "POST"])]
     public function createAction(Request $request): Response
     {
         $user = new User();
@@ -37,7 +33,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            
             $this->userService->encoderPassword($user);
             $this->userService->save($user);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
@@ -48,9 +43,7 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
     
-    /**
-     * @Route("/users/{id}/edit", name="user_edit")
-     */
+    #[Route("/users/{id}/edit", name: "user_edit", methods: ["GET", "POST"])]
     public function editAction(User $user, Request $request): Response
     {
         $form = $this->createForm(UserType::class, $user);
