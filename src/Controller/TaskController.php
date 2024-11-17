@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class TaskController extends AbstractController
 {
     public function __construct(private readonly TaskService $taskService)
@@ -18,9 +20,18 @@ class TaskController extends AbstractController
     }
     
     #[Route("/tasks", name: "task_list", methods: ['GET'])]
-    public function listAction(): Response
+    public function listAction(): Response|RedirectResponse
     {
-        $tasks = $this->taskService->getAll();
+        $user = $this->getUser();
+        
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+        
+        $accessGranted = $this->isGranted('ROLE_ADMIN');
+        
+        $tasks = $this->taskService->findTasksByUser($user, $accessGranted);
+        
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
     
@@ -33,6 +44,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            $task->setUser($this->getUser());
             $this->taskService->save($task);
             
             $this->addFlash('success', 'La tâche a été bien été ajoutée.');
@@ -40,9 +52,10 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('task_list');
         }
         
-        return $this->render('task/create.html.twig', ['form' => $form->createView()]);
+        return $this->render('task/create.html.twig', ['form' => $form]);
     }
     
+    #[IsGranted('TASK_ACCESS', 'task')]
     #[Route("/tasks/{id}/edit", name: "task_edit", methods: ['GET', 'POST'])]
     public function editAction(Task $task, Request $request): Response
     {
@@ -59,29 +72,40 @@ class TaskController extends AbstractController
         }
         
         return $this->render('task/edit.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'task' => $task,
         ]);
     }
     
+    #[IsGranted('TASK_ACCESS', 'task')]
     #[Route("/tasks/{id}/toggle", name: "task_toggle", methods: ['PUT'])]
     public function toggleTaskAction(Task $task, Request $request): RedirectResponse
     {
-        $task->toggle(!$task->isDone());
-        $this->taskService->save($task);
-        
-        if ($task->isDone()) {
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
-        } else {
-            $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme non faite.', $task->getTitle()));
+        if (!$this->isCsrfTokenValid('put-' . $task->getId(), $request->get('_token'))) {
+            $this->addFlash('error', 'Impossible de mettre à jour la tache');
+            return $this->redirectToRoute('task_list');
         }
         
+        $this->taskService->updateTaskStatus($task);
+        
+        $message = $task->isDone()
+            ? sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle())
+            : sprintf('La tâche %s a bien été marquée comme non faite.', $task->getTitle());
+        
+        $this->addFlash('success', $message);
         return $this->redirectToRoute('task_list');
     }
     
+    #[IsGranted('TASK_ACCESS', 'task')]
     #[Route("/tasks/{id}/delete", name: "task_delete", methods: ['DELETE'])]
     public function deleteTaskAction(Task $task, Request $request): RedirectResponse
     {
+        
+        if (!$this->isCsrfTokenValid('delete-' . $task->getId(), $request->get('_token'))) {
+            $this->addFlash('error', 'Impossible de supprimer la tache');
+            return $this->redirectToRoute('task_list');
+        }
+        
         $this->taskService->remove($task);
         
         $this->addFlash('success', 'La tâche a bien été supprimée.');
