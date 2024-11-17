@@ -1,0 +1,52 @@
+<div class="col-sm-6 col-lg-4 col-md-4">
+    <div class="thumbnail">
+        <div>
+            <div class="caption">
+                <div>
+                    <h4 class="pull-right">
+                        {% if task.isDone %}
+                            <span class="glyphicon glyphicon-ok"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove"></span>
+                        {% endif %}
+                    </h4>
+                    <h4>
+                        {% if is_granted('TASK_ACCESS', task) %}
+                            <a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title|capitalize }}</a>
+                        {% else %}
+                            {{ task.title|capitalize }}
+                        {% endif %}
+                    </h4>
+
+                    <p>{{ task.content }}</p>
+                </div>
+                <div>
+                    <h4>
+                        <span class="small">Créé le {{ task.createdAt|date('d M Y H:i','Europe/Paris') }}</span>
+                    </h4>
+                    {% if is_granted('ROLE_ADMIN') and task.user != app.user %}
+                        <h4>
+                            <span class="small">Utilisateur : {{ task.user }}</span>
+                        </h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div>
+            {% if task.user == app.user or task.user == null and is_granted('ROLE_ADMIN') %}
+                <form action="{{ path('task_toggle', {'id' : task.id }) }}" method="post">
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="_token" id="csrf_token[{{ task.id }}]}}" value="{{ csrf_token('put-' ~ task.id) }}">
+                    <button class="btn btn-success btn-sm pull-right">
+                        {% if not task.isDone %}Marquer comme faite{% else %}Marquer non terminée{% endif %}
+                    </button>
+                </form>
+                <form action="{{ path('task_delete', {'id' : task.id }) }}" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" id="csrf_token[{{ task.id }}]}" value="{{ csrf_token('delete-' ~ task.id) }}">
+                    <button class="btn btn-danger btn-sm pull-right">Supprimer</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
