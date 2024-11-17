@@ -28,9 +28,9 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         
-        $accessGranted = $this->isGranted('ROLE_ADMIN');
+        $accessAdmin = $this->isGranted('ROLE_ADMIN');
         
-        $tasks = $this->taskService->findTasksByUser($user, $accessGranted);
+        $tasks = $this->taskService->findTasksForUser($user, $accessAdmin);
         
         return $this->render('task/list.html.twig', ['tasks' => $tasks]);
     }
