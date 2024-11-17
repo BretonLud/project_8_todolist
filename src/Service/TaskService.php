@@ -33,12 +33,12 @@ readonly class TaskService
         $this->taskRepository->save($task);
     }
     
-    public function findTasksByUser(UserInterface $user, bool $accessGranted): array
+    public function findTasksForUser(UserInterface $user, bool $accessAdmin): array
     {
-        return $this->taskRepository->findTasksByUser($user, $accessGranted);
+        return $this->taskRepository->findTasksForUser($user, $accessAdmin);
     }
     
-    public function findTasksByDifferentUsers(UserInterface $user)
+    public function findTasksByDifferentUsers(UserInterface $user): array
     {
         return $this->taskRepository->findTasksByDifferentUsers($user);
     }

@@ -45,14 +45,14 @@ class TaskRepository extends ServiceEntityRepository
             ->getResult();
     }
     
-    public function findTasksByUser(UserInterface $user, bool $accessGranted)
+    public function findTasksForUser(UserInterface $user, bool $accessAdmin): array
     {
         $query = $this->createQueryBuilder('t')
             ->where('t.user = :user')
             ->setParameter('user', $user)
             ->orderBy('t.createdAt', 'DESC');
         
-        if ($accessGranted) {
+        if ($accessAdmin) {
             $query->orWhere('t.user is null')
                 ->orWhere('t.user != :user');
         }
