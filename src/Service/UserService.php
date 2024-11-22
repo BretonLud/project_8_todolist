@@ -4,13 +4,16 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\String\ByteString;
 
 readonly class UserService
 {
     public function __construct(
         private UserRepository              $userRepository,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private EmailService                $emailService,
     )
     {
     }
@@ -39,5 +42,19 @@ readonly class UserService
     {
         $encodedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
         $user->setPassword($encodedPassword);
+    }
+    
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function sendPasswordMail(User $user): void
+    {
+        $this->generatePassword($user);
+        $this->emailService->sendMail($user, 'email/password_reset_mail.html.twig', 'Votre mot de passe');
+    }
+    
+    public function generatePassword(User $user): string
+    {
+        return $user->setPassword(ByteString::fromRandom(16, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=.'));
     }
 }
