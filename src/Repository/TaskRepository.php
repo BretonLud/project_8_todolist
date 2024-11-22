@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Task|null find($id, $lockMode = null, $lockVersion = null)
@@ -33,5 +34,29 @@ class TaskRepository extends ServiceEntityRepository
         $manager = $this->getEntityManager();
         $manager->remove($task);
         $manager->flush();
+    }
+    
+    public function findTasksByDifferentUsers(UserInterface $user): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.user != :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+    
+    public function findTasksForUser(UserInterface $user, bool $accessAdmin): array
+    {
+        $query = $this->createQueryBuilder('t')
+            ->where('t.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('t.createdAt', 'DESC');
+        
+        if ($accessAdmin) {
+            $query->orWhere('t.user is null')
+                ->orWhere('t.user != :user');
+        }
+        
+        return $query->getQuery()->getResult();
     }
 }
