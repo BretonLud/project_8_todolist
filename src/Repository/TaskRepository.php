@@ -36,7 +36,7 @@ class TaskRepository extends ServiceEntityRepository
         $manager->flush();
     }
     
-    public function findTasksByDifferentUsers(UserInterface $user)
+    public function findTasksByDifferentUsers(UserInterface $user): array
     {
         return $this->createQueryBuilder('t')
             ->where('t.user != :user')
