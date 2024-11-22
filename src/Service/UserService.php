@@ -50,7 +50,7 @@ readonly class UserService
     public function sendPasswordMail(User $user): void
     {
         $this->generatePassword($user);
-        $this->emailService->sendMail($user, 'email/password_reset_mail.html.twig', 'Votre mot de passe');
+        $this->emailService->sendMail($user, 'email/password_mail.html.twig', 'Votre mot de passe');
     }
     
     public function generatePassword(User $user): string
