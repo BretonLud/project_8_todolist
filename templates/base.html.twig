@@ -29,7 +29,12 @@
 <!-- Page Content -->
 <div class="container">
     <div class="row">
-        <a href="{{ path('user_create') }}" class="btn btn-primary">Créer un utilisateur</a>
+        {% if not app.user or is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('user_create') }}" class="btn btn-primary">{{ (is_granted('ROLE_ADMIN') ?  "Créer un utilisateur" : "S'enregistrer") }}</a>
+        {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('user_list') }}" class="btn btn-success">Nos utilisateurs</a>
+        {% endif %}
 
         {% if app.user %}
             <a href="{{ path('app_logout') }}" class="pull-right btn btn-danger">Se déconnecter</a>
