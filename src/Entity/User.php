@@ -22,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     #[ORM\Column(type: "string", length: 25, unique: true)]
     #[Assert\NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
-    private string $username;
+    private string $username = "";
     
     #[ORM\Column(type: "string", length: 64)]
     private string $password;
@@ -31,13 +31,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: "Vous devez saisir une adresse email.")]
     #[Assert\Email(message: "Le format de l'adresse n'est pas correcte.")]
     private string $email;
-
+    
+    #[ORM\Column]
+    private array $roles = ['ROLE_USER'];
+    
     /**
      * @var Collection<int, Task>
      */
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user')]
     private Collection $tasks;
-
+    
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
@@ -86,11 +89,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
     
-    public function getRoles(): array
-    {
-        return ['ROLE_USER'];
-    }
-    
     public function eraseCredentials(): void
     {
     }
@@ -99,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->username;
     }
-
+    
     /**
      * @return Collection<int, Task>
      */
@@ -107,17 +105,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->tasks;
     }
-
+    
     public function addTask(Task $task): static
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
             $task->setUser($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removeTask(Task $task): static
     {
         if ($this->tasks->removeElement($task)) {
@@ -126,7 +124,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $task->setUser(null);
             }
         }
-
+        
+        return $this;
+    }
+    
+    /**
+     * @return list<string>
+     * @see UserInterface
+     *
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        
+        return array_unique($roles);
+    }
+    
+    /**
+     * @param list<string> $roles
+     */
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        
         return $this;
     }
 }
