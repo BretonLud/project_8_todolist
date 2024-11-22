@@ -3,13 +3,15 @@
         <div>
             <div class="caption">
                 <div>
-                    <h4 class="pull-right">
-                        {% if task.isDone %}
-                            <span class="glyphicon glyphicon-ok"></span>
-                        {% else %}
-                            <span class="glyphicon glyphicon-remove"></span>
-                        {% endif %}
-                    </h4>
+                    {% if is_granted('TASK_ACCESS', task) %}
+                        <h4 class="pull-right">
+                            {% if task.isDone %}
+                                <span class="glyphicon glyphicon-ok"></span>
+                            {% else %}
+                                <span class="glyphicon glyphicon-remove"></span>
+                            {% endif %}
+                        </h4>
+                    {% endif %}
                     <h4>
                         {% if is_granted('TASK_ACCESS', task) %}
                             <a href="{{ path('task_edit', {'id' : task.id }) }}">{{ task.title|capitalize }}</a>
@@ -33,7 +35,7 @@
             </div>
         </div>
         <div>
-            {% if task.user == app.user or task.user == null and is_granted('ROLE_ADMIN') %}
+            {% if is_granted("TASK_ACCESS", task) %}
                 <form action="{{ path('task_toggle', {'id' : task.id }) }}" method="post">
                     <input type="hidden" name="_method" value="PUT">
                     <input type="hidden" name="_token" id="csrf_token[{{ task.id }}]}}" value="{{ csrf_token('put-' ~ task.id) }}">
