@@ -44,7 +44,9 @@
     "symfony/stopwatch": "^v7.0.0",
     "symfony/web-profiler-bundle": "^v7.0.0",
     "symfony/browser-kit": "^v7.0.0",
-    "doctrine/doctrine-fixtures-bundle": "^3.6"
+    "doctrine/doctrine-fixtures-bundle": "^3.6",
+    "phpunit/phpunit": "^9.5",
+    "symfony/css-selector": "^v7.0.0"
   },
   "scripts": {
     "auto-scripts": {
