@@ -35,8 +35,8 @@ class UserController extends AbstractController
     public function createAction(Request $request): Response
     {
         $user = new User();
-        
-        if ($this->isGranted('ROLE_ADMIN')) {
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        if ($isAdmin) {
             $this->userService->generatePassword($user);
         }
         
@@ -46,12 +46,18 @@ class UserController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()) {
             
-            if ($this->isGranted('ROLE_ADMIN')) {
+            if ($isAdmin) {
                 $this->userService->sendPasswordMail($user);
             }
+            
             $this->userService->encoderPassword($user);
             $this->userService->save($user);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
+            
+            if ($isAdmin) {
+                return $this->redirectToRoute('user_list');
+            }
+            
             
             return $this->redirectToRoute('app_login');
         }
