@@ -22,7 +22,7 @@ class UserController extends AbstractController
     }
     
     #[IsGranted('ROLE_ADMIN')]
-    #[Route("/users", name: "user_list", methods: ["GET"])]
+    #[Route("/admin/users", name: "user_list", methods: ["GET"])]
     public function listAction(): Response
     {
         return $this->render('user/list.html.twig', ['users' => $this->userService->findAll()]);
@@ -35,9 +35,13 @@ class UserController extends AbstractController
     public function createAction(Request $request): Response
     {
         $user = new User();
+        
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $this->userService->generatePassword($user);
+        }
+        
         $formType = $this->isGranted('ROLE_ADMIN') ? UserRoleType::class : UserPasswordType::class;
         $form = $this->createForm($formType, $user);
-        
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
@@ -45,12 +49,11 @@ class UserController extends AbstractController
             if ($this->isGranted('ROLE_ADMIN')) {
                 $this->userService->sendPasswordMail($user);
             }
-            
             $this->userService->encoderPassword($user);
             $this->userService->save($user);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
             
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_login');
         }
         
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
