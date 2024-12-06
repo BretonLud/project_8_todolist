@@ -85,6 +85,7 @@ class Task
     
     public function toggle(bool $flag): self
     {
+        dd($flag);
         $this->isDone = $flag;
         return $this;
     }
