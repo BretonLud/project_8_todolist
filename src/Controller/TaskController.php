@@ -6,10 +6,12 @@ use App\Entity\Task;
 use App\Form\TaskType;
 use App\Service\TaskService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
@@ -23,7 +25,6 @@ class TaskController extends AbstractController
     public function listAction(): Response|RedirectResponse
     {
         $user = $this->getUser();
-        
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
@@ -78,14 +79,10 @@ class TaskController extends AbstractController
     }
     
     #[IsGranted('TASK_ACCESS', 'task')]
+    #[IsCsrfTokenValid(new Expression('"put-task-" ~ args["task"].getId()'), tokenKey: '_token')]
     #[Route("/tasks/{id}/toggle", name: "task_toggle", methods: ['PUT'])]
-    public function toggleTaskAction(Task $task, Request $request): RedirectResponse
+    public function toggleTaskAction(Task $task): RedirectResponse
     {
-        if (!$this->isCsrfTokenValid('put-' . $task->getId(), $request->get('_token'))) {
-            $this->addFlash('error', 'Impossible de mettre à jour la tache');
-            return $this->redirectToRoute('task_list');
-        }
-        
         $this->taskService->updateTaskStatus($task);
         
         $message = $task->isDone()
@@ -97,15 +94,10 @@ class TaskController extends AbstractController
     }
     
     #[IsGranted('TASK_ACCESS', 'task')]
+    #[IsCsrfTokenValid(new Expression('"delete-task-" ~ args["task"].getId()'), tokenKey: '_token')]
     #[Route("/tasks/{id}/delete", name: "task_delete", methods: ['DELETE'])]
-    public function deleteTaskAction(Task $task, Request $request): RedirectResponse
+    public function deleteTaskAction(Task $task): RedirectResponse
     {
-        
-        if (!$this->isCsrfTokenValid('delete-' . $task->getId(), $request->get('_token'))) {
-            $this->addFlash('error', 'Impossible de supprimer la tache');
-            return $this->redirectToRoute('task_list');
-        }
-        
         $this->taskService->remove($task);
         
         $this->addFlash('success', 'La tâche a bien été supprimée.');
