@@ -1,4 +1,16 @@
 {
+    "dama/doctrine-test-bundle": {
+        "version": "8.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "7.2",
+            "ref": "896306d79d4ee143af9eadf9b09fd34a8c391b70"
+        },
+        "files": [
+            "config/packages/dama_doctrine_test_bundle.yaml"
+        ]
+    },
     "doctrine/annotations": {
         "version": "1.14",
         "recipe": {
@@ -52,7 +64,7 @@
         ]
     },
     "phpunit/phpunit": {
-        "version": "9.6",
+        "version": "11.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -160,12 +172,12 @@
         ]
     },
     "symfony/phpunit-bridge": {
-        "version": "4.4",
+        "version": "7.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "4.3",
-            "ref": "170ab6f9abd4e1dab87462847116659ae138c34e"
+            "version": "6.3",
+            "ref": "a411a0480041243d97382cac7984f7dce7813c08"
         },
         "files": [
             ".env.test",
