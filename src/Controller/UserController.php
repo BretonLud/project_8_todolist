@@ -50,7 +50,7 @@ class UserController extends AbstractController
             $this->processUserCreation($user, $isAdmin);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
             
-            return $this->redirectToAppropriateRoute($isAdmin, 'app_login');
+            return new RedirectResponse($this->generateUrl($isAdmin ? 'user_list' : 'app_login'));
         }
         
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
@@ -74,12 +74,6 @@ class UserController extends AbstractController
         $this->userService->save($user);
     }
     
-    private function redirectToAppropriateRoute(bool $isAdmin, string $nonAdminRoute): RedirectResponse
-    {
-        $routeName = $isAdmin ? 'user_list' : $nonAdminRoute;
-        return $this->redirectToRoute($routeName);
-    }
-    
     #[Route("/users/{id}/edit", name: "user_edit", methods: ["GET", "POST"])]
     public function editAction(User $user, Request $request): Response
     {
@@ -96,7 +90,7 @@ class UserController extends AbstractController
             $this->processUserUpdate($user);
             $this->addFlash('success', "L'utilisateur a bien été modifié");
             
-            return $this->redirectToAppropriateRoute($this->isGranted('ROLE_ADMIN'), 'homepage');
+            return new RedirectResponse($this->generateUrl($this->isGranted('ROLE_ADMIN') ? 'user_list' : 'homepage'));
         }
         
         return $this->render('user/edit.html.twig', [
