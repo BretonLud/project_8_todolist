@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TaskTestValidation extends KernelTestCase
 {
-    public function testTitleNotBlankConstraint()
+    public function testTitleNotBlankConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
@@ -20,7 +20,7 @@ class TaskTestValidation extends KernelTestCase
         $this->assertEquals('Vous devez saisir un titre.', $violations[0]->getMessage());
     }
     
-    public function testContentNotBlankConstraint()
+    public function testContentNotBlankConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
