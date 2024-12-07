@@ -33,11 +33,6 @@ readonly class UserService
         $this->userRepository->save($user);
     }
     
-    public function remove(User $user): void
-    {
-        $this->userRepository->remove($user);
-    }
-    
     public function encoderPassword(User $user): void
     {
         $encodedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
