@@ -7,6 +7,7 @@ use App\Form\User\UserPasswordType;
 use App\Form\User\UserRoleType;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -32,7 +33,7 @@ class UserController extends AbstractController
      * @throws TransportExceptionInterface
      */
     #[Route("/users/create", name: "user_create", methods: ["GET", "POST"])]
-    public function createAction(Request $request): Response
+    public function createAction(Request $request): Response|RedirectResponse
     {
         $user = new User();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
