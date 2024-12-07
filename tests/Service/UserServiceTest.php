@@ -18,6 +18,19 @@ class UserServiceTest extends TestCase
     private EmailService $emailService;
     private UserService $userService;
     
+    
+    /**
+     * @throws Exception
+     */
+    public function testFind(): void
+    {
+        $user = $this->createMock(User::class);
+        $this->userRepository->method('find')->willReturn($user);
+        
+        $result = $this->userService->find(1);
+        $this->assertSame($user, $result);
+    }
+    
     /**
      * @throws Exception
      */
