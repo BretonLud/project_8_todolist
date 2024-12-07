@@ -13,7 +13,7 @@ class TaskControllerTest extends WebTestCase
     
     public function testListAction(): void
     {
-        $this->client->request('GET', '/tasks');;
+        $this->client->request('GET', '/tasks');
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('div.alert.alert-warning', "Il n'y a pas encore de tâche enregistrée.");
     }
