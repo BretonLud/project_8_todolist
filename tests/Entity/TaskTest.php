@@ -7,7 +7,7 @@ use App\Entity\User;
 
 final class TaskTest extends TaskTestValidation
 {
-    public function testCreateTask()
+    public function testCreateTask(): void
     {
         $task = new Task();
         
@@ -18,7 +18,7 @@ final class TaskTest extends TaskTestValidation
         $this->assertSame('', $task->getContent());
     }
     
-    public function testSetTitle()
+    public function testSetTitle(): void
     {
         $task = new Task();
         $task->setTitle('New Task');
@@ -26,7 +26,7 @@ final class TaskTest extends TaskTestValidation
         $this->assertSame('New Task', $task->getTitle());
     }
     
-    public function testSetContent()
+    public function testSetContent(): void
     {
         $task = new Task();
         $task->setContent('This is the content of the task.');
@@ -34,7 +34,7 @@ final class TaskTest extends TaskTestValidation
         $this->assertSame('This is the content of the task.', $task->getContent());
     }
     
-    public function testToggle()
+    public function testToggle(): void
     {
         $task = new Task();
         $task->toggle(true);
@@ -45,7 +45,7 @@ final class TaskTest extends TaskTestValidation
         $this->assertFalse($task->isDone());
     }
     
-    public function testUserAssociation()
+    public function testUserAssociation(): void
     {
         $task = new Task();
         $user = new User();
@@ -54,11 +54,20 @@ final class TaskTest extends TaskTestValidation
         $this->assertSame($user, $task->getUser());
     }
     
-    public function testToString()
+    public function testToString(): void
     {
         $task = new Task();
         $task->setTitle('Task Title');
         
         $this->assertSame('Task Title', (string)$task);
+    }
+    
+    public function testCreatedAt(): void
+    {
+        $task = new Task();
+        $task->setCreatedAt(new \DateTime('2020-01-01'));
+        
+        $this->assertInstanceOf(\DateTime::class, $task->getCreatedAt());
+        $this->assertSame('2020-01-01', $task->getCreatedAt()->format('Y-m-d'));
     }
 }
