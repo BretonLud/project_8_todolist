@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserTestValidation extends KernelTestCase
 {
-    public function testUsernameNotBlankConstraint()
+    public function testUsernameNotBlankConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
@@ -21,7 +21,7 @@ class UserTestValidation extends KernelTestCase
         $this->assertEquals('Vous devez saisir un nom d\'utilisateur.', $violations[0]->getMessage());
     }
     
-    public function testPasswordNotBlankConstraint()
+    public function testPasswordNotBlankConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
@@ -34,7 +34,7 @@ class UserTestValidation extends KernelTestCase
         $this->assertEquals('Vous devez saisir un mot de passe.', $violations[0]->getMessage());
     }
     
-    public function testEmailNotBlankConstraint()
+    public function testEmailNotBlankConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
@@ -47,7 +47,7 @@ class UserTestValidation extends KernelTestCase
         $this->assertEquals('Vous devez saisir une adresse email.', $violations[0]->getMessage());
     }
     
-    public function testEmailValidConstraint()
+    public function testEmailValidConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
@@ -60,7 +60,7 @@ class UserTestValidation extends KernelTestCase
         $this->assertEquals('Le format de l\'adresse n\'est pas correcte.', $violations[0]->getMessage());
     }
     
-    public function testEmailUniqueConstraint()
+    public function testEmailUniqueConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
@@ -81,7 +81,7 @@ class UserTestValidation extends KernelTestCase
         $this->assertEquals("Il existe déjà une personne avec cet email.", $violations[0]->getMessage());
     }
     
-    public function testUsernameUniqueConstraint()
+    public function testUsernameUniqueConstraint(): void
     {
         $validator = self::getContainer()->get(ValidatorInterface::class);
         
