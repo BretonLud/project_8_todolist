@@ -23,19 +23,14 @@ readonly class UserService
         return $this->userRepository->findAll();
     }
     
-    public function find(User $user): ?User
+    public function find(int $id): ?User
     {
-        return $this->userRepository->find($user->getId());
+        return $this->userRepository->find($id);
     }
     
     public function save(User $user): void
     {
         $this->userRepository->save($user);
-    }
-    
-    public function remove(User $user): void
-    {
-        $this->userRepository->remove($user);
     }
     
     public function encoderPassword(User $user): void
@@ -49,7 +44,6 @@ readonly class UserService
      */
     public function sendPasswordMail(User $user): void
     {
-        $this->generatePassword($user);
         $this->emailService->sendMail($user, 'email/password_mail.html.twig', 'Votre mot de passe');
     }
     

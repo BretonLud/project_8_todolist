@@ -38,8 +38,4 @@ readonly class TaskService
         return $this->taskRepository->findTasksForUser($user, $accessAdmin);
     }
     
-    public function findTasksByDifferentUsers(UserInterface $user): array
-    {
-        return $this->taskRepository->findTasksByDifferentUsers($user);
-    }
 }

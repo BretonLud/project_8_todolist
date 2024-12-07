@@ -19,13 +19,16 @@ class Task
     
     #[ORM\Column(type: "string")]
     #[Assert\NotBlank(message: "Vous devez saisir un titre.")]
+    #[Assert\Type('string')]
     private string $title = "";
     
     #[ORM\Column(type: "text")]
     #[Assert\NotBlank(message: "Vous devez saisir du contenu.")]
+    #[Assert\Type('string')]
     private string $content = "";
     
     #[ORM\Column(type: "boolean")]
+    #[Assert\Type('boolean')]
     private bool $isDone;
     
     #[ORM\ManyToOne(inversedBy: 'tasks')]
