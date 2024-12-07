@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DefaultControllerTest extends WebTestCase
 {
-    public function testIndexAction()
+    public function testIndexAction(): void
     {
         $client = static::createClient();
         
