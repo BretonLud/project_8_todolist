@@ -25,9 +25,6 @@ class TaskController extends AbstractController
     public function listAction(): Response|RedirectResponse
     {
         $user = $this->getUser();
-        if (!$user) {
-            return $this->redirectToRoute('app_login');
-        }
         
         $accessAdmin = $this->isGranted('ROLE_ADMIN');
         
