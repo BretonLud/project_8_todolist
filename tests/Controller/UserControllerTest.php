@@ -40,13 +40,13 @@ class UserControllerTest extends WebTestCase
     
     public function testListActionAccessAuthorizeAdmin(): void
     {
-        $this->connectAdmin();
+        $this->createAndConnectAdmin();
         
         $this->client->request('GET', '/admin/users');
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
     
-    private function connectAdmin(): void
+    private function createAndConnectAdmin(): void
     {
         $user = new User();
         $user->setUsername('testAdmin');
@@ -84,7 +84,7 @@ class UserControllerTest extends WebTestCase
     public function testCreateActionSuccessfulByAdmin(): void
     {
         
-        $this->connectAdmin();
+        $this->createAndConnectAdmin();
         
         $crawler = $this->client->request('GET', '/users/create');
         $form = $crawler->selectButton('Ajouter')->form();
@@ -97,6 +97,88 @@ class UserControllerTest extends WebTestCase
         
         $this->client->followRedirect();
         $this->assertSelectorTextContains('.alert-success', "L'utilisateur a bien été ajouté.");
+    }
+    
+    public function testEditActionForAdmin(): void
+    {
+        $this->createAndConnectAdmin();
+        
+        $user = new User();
+        $user->setUsername('testuser');
+        $user->setEmail('test@example.com');
+        $user->setPassword('<PASSWORD>');
+        $manager = $this->client->getContainer()->get('doctrine')->getManager();
+        $manager->persist($user);
+        $manager->flush();
+        
+        $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        $this->assertResponseIsSuccessful();
+        
+        $form = $crawler->selectButton('Modifier')->form([
+            'user_role[username]' => 'newUsername',
+            'user_role[email]' => 'newemail@example.com',
+        ]);
+        
+        $this->client->submit($form);
+        
+        $this->assertResponseRedirects('/admin/users');
+        $this->client->followRedirect();
+        $updatedUser = $manager->getRepository(User::class)->find($user->getId());
+        $this->assertEquals('newUsername', $updatedUser);
+        $this->assertSelectorTextContains('.alert-success', "Superbe ! L'utilisateur a bien été modifié");
+        
+    }
+    
+    public function testEditOwnDetails(): void
+    {
+        
+        $user = $this->createUser('testUser');
+        
+        $this->client->loginUser($user);
+        
+        $crawler = $this->client->request('GET', '/users/' . $user->getId() . '/edit');
+        
+        $this->assertResponseIsSuccessful();
+        
+        $form = $crawler->selectButton('Modifier')->form([
+            'user_password[password][first]' => 'newPassword',
+            'user_password[password][second]' => 'newPassword',
+        ]);
+        
+        $this->client->submit($form);
+        
+        $this->assertResponseRedirects('/');
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('.alert-success', "L'utilisateur a bien été modifié");
+    }
+    
+    private function createUser(string $value): User
+    {
+        $user = new User();
+        $user->setUsername("$value");
+        $user->setEmail("$value@example.com");
+        $user->setPassword('<PASSWORD>');
+        
+        $manager = $this->client->getContainer()->get('doctrine')->getManager();
+        $manager->persist($user);
+        $manager->flush();
+        
+        return $user;
+    }
+    
+    public function testUserEditNotAllowed(): void
+    {
+        
+        $user = $this->createUser('testUser');
+        $user2 = $this->createUser('testUser2');
+        
+        $this->client->loginUser($user);
+        
+        $crawler = $this->client->request('GET', '/users/' . $user2->getId() . '/edit');
+        // Vérifie la redirection pour absence de permission
+        $this->assertResponseRedirects('/');
+        $this->client->followRedirect();
+        $this->assertSelectorTextContains('.alert-danger', "Vous n'avez pas les droits pour modifier cet utilisateur.");
     }
     
     protected function setUp(): void
