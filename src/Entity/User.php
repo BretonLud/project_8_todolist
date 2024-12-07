@@ -58,17 +58,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     public function getUsername(): string
     {
-        return $this->getUserIdentifier();
+        return $this->username;
     }
     
     public function setUsername(string $username): self
     {
+        if (empty(trim($username))) {
+            throw new \InvalidArgumentException('Le nom d\'utilisateur ne peut pas être vide.');
+        }
+        
         $this->username = $username;
         return $this;
     }
     
     public function getUserIdentifier(): string
     {
+        if (empty($this->username)) {
+            throw new \RuntimeException('Username cannot be empty');
+        }
+        
         return $this->username;
     }
     
