@@ -74,7 +74,7 @@ class UserController extends AbstractController
         $this->userService->save($user);
     }
     
-    private function redirectToAppropriateRoute(bool $isAdmin, string $nonAdminRoute): Response
+    private function redirectToAppropriateRoute(bool $isAdmin, string $nonAdminRoute): RedirectResponse
     {
         $routeName = $isAdmin ? 'user_list' : $nonAdminRoute;
         return $this->redirectToRoute($routeName);
@@ -93,7 +93,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->processUserUpdate($user, $this->isGranted('ROLE_ADMIN'));
+            $this->processUserUpdate($user);
             $this->addFlash('success', "L'utilisateur a bien été modifié");
             
             return $this->redirectToAppropriateRoute($this->isGranted('ROLE_ADMIN'), 'homepage');
@@ -110,7 +110,7 @@ class UserController extends AbstractController
         return $this->getUser() === $user || $this->isGranted('ROLE_ADMIN');
     }
     
-    private function processUserUpdate(User $user, bool $isAdmin): void
+    private function processUserUpdate(User $user): void
     {
         $this->userService->encoderPassword($user);
         $this->userService->save($user);
