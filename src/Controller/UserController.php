@@ -41,57 +41,78 @@ class UserController extends AbstractController
             $this->userService->generatePassword($user);
         }
         
-        $formType = $isAdmin ? UserRoleType::class : UserPasswordType::class;
+        $formType = $this->determineFormType();
         $form = $this->createForm($formType, $user);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            
-            if ($isAdmin) {
-                $this->userService->sendPasswordMail($user);
-            }
-            
-            $this->userService->encoderPassword($user);
-            $this->userService->save($user);
+            $this->processUserCreation($user, $isAdmin);
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
             
-            if ($isAdmin) {
-                return $this->redirectToRoute('user_list');
-            }
-            
-            
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToAppropriateRoute($isAdmin, 'app_login');
         }
         
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
     
+    private function determineFormType(): string
+    {
+        return $this->isGranted('ROLE_ADMIN') ? UserRoleType::class : UserPasswordType::class;
+    }
+    
+    /**
+     * @throws TransportExceptionInterface
+     */
+    private function processUserCreation(User $user, bool $isAdmin): void
+    {
+        if ($isAdmin) {
+            $this->userService->sendPasswordMail($user);
+        }
+        
+        $this->userService->encoderPassword($user);
+        $this->userService->save($user);
+    }
+    
+    private function redirectToAppropriateRoute(bool $isAdmin, string $nonAdminRoute): Response
+    {
+        $routeName = $isAdmin ? 'user_list' : $nonAdminRoute;
+        return $this->redirectToRoute($routeName);
+    }
+    
     #[Route("/users/{id}/edit", name: "user_edit", methods: ["GET", "POST"])]
     public function editAction(User $user, Request $request): Response
     {
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-        
-        if ($this->getUser() !== $user && !$isAdmin) {
+        if (!$this->isUserAllowedToEdit($user)) {
             $this->addFlash('error', "Vous n'avez pas les droits pour modifier cet utilisateur.");
             return $this->redirectToRoute('homepage');
         }
         
-        $formType = $this->isGranted('ROLE_ADMIN') ? UserRoleType::class : UserPasswordType::class;
+        $formType = $this->determineFormType();
         $form = $this->createForm($formType, $user);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userService->encoderPassword($user);
-            $this->userService->save($user);
+            $this->processUserUpdate($user, $this->isGranted('ROLE_ADMIN'));
             $this->addFlash('success', "L'utilisateur a bien été modifié");
             
-            if ($isAdmin) {
-                return $this->redirectToRoute('user_list');
-            }
-            
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToAppropriateRoute($this->isGranted('ROLE_ADMIN'), 'homepage');
         }
         
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+        return $this->render('user/edit.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user
+        ]);
     }
+    
+    private function isUserAllowedToEdit(User $user): bool
+    {
+        return $this->getUser() === $user || $this->isGranted('ROLE_ADMIN');
+    }
+    
+    private function processUserUpdate(User $user, bool $isAdmin): void
+    {
+        $this->userService->encoderPassword($user);
+        $this->userService->save($user);
+    }
+    
 }
