@@ -27,6 +27,14 @@ final class UserTest extends UserTestValidation
         $this->assertEquals('testuser', (string)$user);
     }
     
+    public function testGetUserIdentifierThrowsExceptionWhenUsernameIsEmpty(): void
+    {
+        $user = new User();
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Username cannot be empty');
+        $user->getUserIdentifier();
+    }
+    
     public function testPassword(): void
     {
         $user = new User();
