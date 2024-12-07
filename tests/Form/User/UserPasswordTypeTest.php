@@ -8,7 +8,7 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class UserPasswordTypeTest extends TypeTestCase
 {
-    public function testSubmitValidData()
+    public function testSubmitValidData(): void
     {
         $formData = [
             'username' => 'testuser',
@@ -46,7 +46,7 @@ class UserPasswordTypeTest extends TypeTestCase
         }
     }
     
-    public function testSubmitInvalidPassword()
+    public function testSubmitInvalidPassword(): void
     {
         $formData = [
             'username' => 'testuser',
