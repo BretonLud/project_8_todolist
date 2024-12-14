@@ -8,7 +8,7 @@
 .phpunit.result.cache
 .phpunit.cache
 /phpunit.xml
-.phpunit.cache
+/.phpunit.cache
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/framework-bundle ###
