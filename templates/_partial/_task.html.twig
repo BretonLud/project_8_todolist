@@ -28,7 +28,7 @@
                     </h4>
                     {% if is_granted('ROLE_ADMIN') and task.user != app.user %}
                         <h4>
-                            <span class="small">Utilisateur : {{ task.user }}</span>
+                            <span class="small">Utilisateur : {{ (task.user) ? task.user : "Pas d'utilisateur" }}</span>
                         </h4>
                     {% endif %}
                 </div>

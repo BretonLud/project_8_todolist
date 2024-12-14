@@ -20,7 +20,7 @@ class AppFixtures extends Fixture
     
     public function load(ObjectManager $manager): void
     {
-        $users = [];
+        $users[] = null;
         
         $admin = new User();
         $admin->setUsername('admin');
