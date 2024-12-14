@@ -12,7 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Table(name: "user")]
 #[ORM\Entity(repositoryClass: "App\Repository\UserRepository")]
-#[UniqueEntity("email")]
+#[UniqueEntity("username", "Il existe déjà une personne avec cet username.")]
+#[UniqueEntity("email", "Il existe déjà une personne avec cet email.")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,14 +23,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     #[ORM\Column(type: "string", length: 25, unique: true)]
     #[Assert\NotBlank(message: "Vous devez saisir un nom d'utilisateur.")]
+    #[Assert\Type('string')]
     private string $username = "";
     
     #[ORM\Column(type: "string", length: 64)]
+    #[Assert\NotBlank(message: "Vous devez saisir un mot de passe.")]
+    #[Assert\Type('string')]
     private string $password;
     
     #[ORM\Column(type: "string", length: 60, unique: true)]
     #[Assert\NotBlank(message: "Vous devez saisir une adresse email.")]
     #[Assert\Email(message: "Le format de l'adresse n'est pas correcte.")]
+    #[Assert\Type('string')]
     private string $email;
     
     #[ORM\Column]
@@ -53,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     public function getUsername(): string
     {
-        return $this->getUserIdentifier();
+        return $this->username;
     }
     
     public function setUsername(string $username): self
@@ -64,6 +69,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     public function getUserIdentifier(): string
     {
+        if (empty($this->username)) {
+            throw new \RuntimeException('Username cannot be empty');
+        }
+        
         return $this->username;
     }
     
@@ -89,6 +98,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
     
+    /**
+     * @return void
+     * @codeCoverageIgnore
+     */
     public function eraseCredentials(): void
     {
     }

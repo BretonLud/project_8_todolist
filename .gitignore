@@ -1,15 +1,14 @@
-/build/
-/var/
-/vendor/
-/public/bundles/
 
-.env.*
+
+
+/.env.*
 
 ###> symfony/phpunit-bridge ###
 .phpunit
 .phpunit.result.cache
 .phpunit.cache
 /phpunit.xml
+.phpunit.cache
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/framework-bundle ###
@@ -20,6 +19,7 @@
 /public/bundles/
 /var/
 /vendor/
+/build/
 ###< symfony/framework-bundle ###
 
 ###> symfony/webpack-encore-bundle ###
