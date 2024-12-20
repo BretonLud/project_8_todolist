@@ -23,6 +23,10 @@ framework:
   php_errors:
     log: true
 
+  cache:
+    pools:
+      profiling_collect_backtrace: [ ]
+
 when@test:
   framework:
     test: true
