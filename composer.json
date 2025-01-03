@@ -35,16 +35,20 @@
     "symfony/yaml": "^v7.0.0",
     "symfony/webpack-encore-bundle": "^v2.2.0",
     "symfony/cache": "^v7.0.0",
-    "symfony/debug-bundle": "^v7.0.0"
+    "symfony/debug-bundle": "^v7.0.0",
+    "symfony/phpunit-bridge": "^7.1",
+    "symfony/expression-language": "^v7.0.0"
   },
   "require-dev": {
-    "symfony/phpunit-bridge": "^v7.0.0",
     "symfony/dotenv": "^v7.0.0",
     "symfony/maker-bundle": "^v1.61.0",
     "symfony/stopwatch": "^v7.0.0",
     "symfony/web-profiler-bundle": "^v7.0.0",
     "symfony/browser-kit": "^v7.0.0",
-    "doctrine/doctrine-fixtures-bundle": "^3.6"
+    "doctrine/doctrine-fixtures-bundle": "^3.6",
+    "symfony/css-selector": "^v7.0.0",
+    "phpunit/phpunit": "^11.4",
+    "dama/doctrine-test-bundle": "^8.2"
   },
   "scripts": {
     "auto-scripts": {

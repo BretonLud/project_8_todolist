@@ -6,7 +6,6 @@ namespace App\Form\User;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class UserPasswordType extends UserType
 {
@@ -20,9 +19,6 @@ class UserPasswordType extends UserType
             'required' => true,
             'first_options' => ['label' => 'Mot de passe'],
             'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
-            'constraints' => [
-                new NotBlank(),
-            ]
         ]);
         
     }
