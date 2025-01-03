@@ -37,7 +37,8 @@
     "symfony/cache": "^v7.0.0",
     "symfony/debug-bundle": "^v7.0.0",
     "symfony/phpunit-bridge": "^7.1",
-    "symfony/expression-language": "^v7.0.0"
+    "symfony/expression-language": "^v7.0.0",
+    "symfony/runtime": "^v7.0.0"
   },
   "require-dev": {
     "symfony/dotenv": "^v7.0.0",
