@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 mariadb --user=root --password="$MARIADB_ROOT_PASSWORD" <<-EOSQL
     CREATE DATABASE IF NOT EXISTS todolist_test;
