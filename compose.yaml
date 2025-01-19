@@ -29,8 +29,9 @@ services:
       SERVICE_TAGS: ${APP_ENV}
       SERVICE_NAME: ${APP_SLUG}_database
       MYSQL_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     volumes:
-      - /var/www/project_8_todolist/database:/var/lib/mysql/
+      - /var/www/database:/var/lib/mysql/
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
       - ./docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh
     networks:
@@ -38,7 +39,7 @@ services:
     env_file:
       - .env.local
 
-      # PHP Service
+  # PHP Service
   php:
     build:
       context: .
