@@ -10,7 +10,6 @@ https://openclassrooms.com/projects/ameliorer-un-projet-existant-1
 ***
 
 Installer docker
-Installer npm
 
 ### Installation du projet
 
@@ -51,11 +50,6 @@ Paramétrer les variables d'environnement avec vos informations:
 
 ```
 DATABASE_URL="mysql://user:password@database:3306/todolist"
-```
-Lancer les commandes npm suivantes:
-
-```
-npm i && npm run build
 ```
 
 Lancer les containers docker avec les 2 commandes suivantes :

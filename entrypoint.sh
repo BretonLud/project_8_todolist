@@ -14,9 +14,9 @@ while true; do
   sleep 5s
 done
 
+npm i && npm run build
 
 php bin/phpunit --coverage-html var/coverage
-
 
 # Une fois la migration réussie, démarrez php-fpm
 php-fpm
