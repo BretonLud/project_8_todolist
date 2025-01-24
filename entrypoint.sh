@@ -1,4 +1,5 @@
 #!/bin/bash
+composer i
 
 while true; do
   php bin/console d:m:m --no-interaction && break
